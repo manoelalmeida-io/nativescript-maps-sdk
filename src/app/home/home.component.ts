@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { registerElement } from "nativescript-angular/element-registry";
-import { MapView } from "nativescript-google-maps-sdk";
+import { MapView, Marker, Position, Style } from "nativescript-google-maps-sdk";
+import mapConfig from "../config/map.json";
 
 registerElement("MapView", () => MapView);
 
@@ -9,14 +10,6 @@ registerElement("MapView", () => MapView);
     templateUrl: "./home.component.html"
 })
 export class HomeComponent implements OnInit {
-
-    latitude: -23.4188119;
-    longitude: -46.7171601;
-    zoom: 8;
-    bearing: 0;
-    tilt: 0;
-    mapAnimationsEnabled: true;
-    padding: 0;
 
     constructor() {
         // Use the component constructor to inject providers.
@@ -29,9 +22,22 @@ export class HomeComponent implements OnInit {
     onMapReady(event) {
         let mapView = event.object as MapView;
 
+        mapView.mapAnimationsEnabled = false;
+
         mapView.latitude = -23.4188967;
         mapView.longitude = -46.7172574;
 
         mapView.zoom = 17;
+
+        mapView.setStyle(<Style>JSON.parse(JSON.stringify(mapConfig)));
+
+        let marker = new Marker();
+        marker.position = Position.positionFromLatLng(-23.418994, -46.718118);
+        marker.title = 'TERM. PIRITUBA';
+        marker.snippet = '9023-10';
+        marker.color = '#6B8E23';
+        marker.flat = true;
+
+        mapView.addMarker(marker);
     }
 }
